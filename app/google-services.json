@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:633013863223:android:26fdc00ae24a92d04b90b2",
+        "android_client_info": {
+          "package_name": "com.grip.spark01"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "633013863223-4bt37vgkkpqg84sb1qdf4hmas79ju68l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5WeEClEsRlj4mIo3eMg19CUVLnCj7U40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "633013863223-4bt37vgkkpqg84sb1qdf4hmas79ju68l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:633013863223:android:9516ed3e334f42354b90b2",
         "android_client_info": {
           "package_name": "om.grip.spark01"
