@@ -5,13 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class signup extends AppCompatActivity {
 
     TextInputLayout name,email,psw;
+    Button SignUp,google_signup,fb_signup;
+    boolean isAllFieldsChecked = false;
 
+
+    FirebaseDatabase RootNode;
+    DatabaseReference reference;
 
 
     @Override
@@ -27,72 +36,88 @@ public class signup extends AppCompatActivity {
         name=findViewById(R.id.name1);
         email=findViewById((R.id.email1));
         psw=findViewById((R.id.psw1));
+        SignUp=findViewById((R.id.signup));
+        google_signup=findViewById((R.id.google_btn));
+        fb_signup=findViewById((R.id.fb_btn));
 
+
+
+        SignUp.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                RootNode= FirebaseDatabase.getInstance();
+                reference= RootNode.getReference("Users");
+
+                String u_name=name.getEditText().getText().toString().trim();
+                String u_email=email.getEditText().getText().toString().trim();
+                String u_psw=psw.getEditText().getText().toString().trim();
+
+
+                if(u_name.isEmpty()){
+                        name.setError("This feild is required");
+                }
+                else if(u_email.isEmpty()){
+                    email.setError("This feild is required");
+                }
+                else if(u_psw.isEmpty()){
+                    psw.setError("This feild is required");
+
+                }
+                else{
+                    name.setError(null);
+                    email.setError(null);
+                    psw.setError(null);
+
+
+                    int index = u_email.indexOf('@');
+                    String n_email = u_email.substring(0, index);
+
+
+                    UserHelperClass helperClass = new UserHelperClass(u_name, u_email, u_psw);
+                    reference.child(n_email).setValue(helperClass);
+
+                    Toast.makeText(getApplicationContext(), "Registered successfully", Toast.LENGTH_SHORT).show();
+
+                    name.getEditText().setText("");
+                    email.getEditText().setText("");
+                    psw.getEditText().setText("");
+                }
+
+
+            }
+        });
+
+
+        //Google
+
+        google_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String u_name=name.getEditText().getText().toString().trim();
+                String u_email=email.getEditText().getText().toString().trim();
+                String u_psw=psw.getEditText().getText().toString().trim();
+
+            }
+        });
+
+        //FB
+
+        fb_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String u_name=name.getEditText().getText().toString().trim();
+                String u_email=email.getEditText().getText().toString().trim();
+                String u_psw=psw.getEditText().getText().toString().trim();
+
+            }
+        });
 
     }
-    private Boolean validateName(){
-            String n_val=name.getEditText().getText().toString();
-            if(n_val.isEmpty()){
-                psw.setError("Field cannot be empty");
-                return false;
-            }
-            else{
-                psw.setError(null);
-                return true;
-            }
-        }
-
-    private Boolean validateEmail(){
-            String e_val=email.getEditText().getText().toString();
-            String pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
-            if(e_val.isEmpty()){
-                email.setError("Field cannot be empty");
-                return false;
-            }
-            else if(e_val.matches(pattern)){
-                email.setError("Invalid email address");
-                return false;
-            }
-            else{
-                email.setError(null);
-                return true;
-            }
-        }
-
-    private Boolean ValidatePSW(){
-        String p_val=email.getEditText().getText().toString();
-        String psw_val="^(?=.*[0-9])"
-                + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=])"
-                + "(?=\\S+$).{8,20}$";
-        if(p_val.isEmpty()){
-            email.setError("Field cannot be empty");
-            return false;
-        }
-        else if(p_val.matches(psw_val)){
-            email.setError("Invalid email address");
-            return false;
-        }
-        else{
-            email.setError(null);
-            return true;
-        }
-    }
-
-    public void HandleSignUp(View view){
-
-        if(!validateName() || !validateEmail() || ValidatePSW()){
-            return;
-        }
-
-        String user_name=name.getEditText().getText().toString();
-        String user_email=email.getEditText().getText().toString();
-        String user_psw=psw.getEditText().getText().toString();
-
-//        UserHelperClass helperClass=new UserHelperClass(user_name,user_email,user_psw);
-//        refer
 
 
-    }
+
 
 }

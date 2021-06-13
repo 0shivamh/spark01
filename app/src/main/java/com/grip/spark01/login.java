@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class login extends AppCompatActivity {
-    Button HandleSignUp,forgot,go;
+    Button HandleSignUp,forgot,go,g_btn,fb_btn;
     ImageView logo;
     TextView head;
     TextInputLayout email,psw;
@@ -39,39 +39,35 @@ public class login extends AppCompatActivity {
         forgot=findViewById(R.id.forgot);
         go=findViewById(R.id.go);
         short_t=findViewById(R.id.stitle);
+        g_btn=findViewById(R.id.google_btn);
+        fb_btn=findViewById(R.id.fb_btn);
 
 
 
 
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-//        private Boolean validateName(){
-//            String val=psw.getEditText().getText().toString();
-//            String pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
-//            if(val.isEmpty()){
-//                email.setError("Field cannot be empty");
-//                return false;
-//            }
-//            else if(val.matches(pattern)){
-//                email.setError("Invalid email address");
-//                return false;
-//            }
-//            else{
-//                email.setError(null);
-//                return true;
-//            }
-//        }
-//
-//        private Boolean validatPSW(){
-//            String val=psw.getEditText().getText().toString();
-//            if(val.isEmpty()){
-//                psw.setError("Field cannot be empty");
-//                return false;
-//            }
-//            else{
-//                psw.setError(null);
-//                return true;
-//            }
-//        }
+            }
+        });
+
+
+        g_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        fb_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
 
 
         //call activity
