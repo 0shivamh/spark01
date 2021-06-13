@@ -1,5 +1,6 @@
 package com.grip.spark01;
 
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,8 +32,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class login extends AppCompatActivity {
+    TwitterLoginButton loginButton;
     Button HandleSignUp, forgot, go, g_btn, fb_btn;
     ImageView logo;
     TextView head;
@@ -43,6 +55,9 @@ public class login extends AppCompatActivity {
     private final static  int RC_SIGN_IN=123;
 
 
+    OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -50,7 +65,10 @@ public class login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Twitter.initialize(this);
         setContentView(R.layout.activity_login);
+
+
 
         HandleSignUp = findViewById(R.id.newuser);
         logo = findViewById(R.id.logo);
@@ -66,6 +84,9 @@ public class login extends AppCompatActivity {
         auth= FirebaseAuth.getInstance();
 
         createRequest();
+
+
+
 
         go.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +144,26 @@ public class login extends AppCompatActivity {
         fb_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                auth
+                        .startActivityForSignInWithProvider(/* activity= */ login.this, provider.build())
+                        .addOnSuccessListener(
+                                new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        Toast.makeText(getApplicationContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(login.this,profile.class));
+                                        finish();
+                                    }
+                                })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Handle failure.
+                                        Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
 
+                                    }
+                                });
             }
         });
 
@@ -188,6 +228,9 @@ public class login extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+        loginButton.onActivityResult(requestCode, resultCode, data);
+
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -223,6 +266,14 @@ public class login extends AppCompatActivity {
                     }
                 });
     }
+
+
+
+    //facebook OAuth
+
+
+
+
 
 
 }

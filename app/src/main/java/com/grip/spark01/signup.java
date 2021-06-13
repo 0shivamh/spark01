@@ -2,7 +2,6 @@ package com.grip.spark01;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
@@ -25,13 +25,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class signup extends AppCompatActivity {
+    TwitterLoginButton loginButton;
 
     TextInputLayout name,email,psw;
     Button SignUp,google_signup,fb_signup;
+    OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
 
 
     FirebaseDatabase RootNode;
@@ -47,6 +52,7 @@ public class signup extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Twitter.initialize(this);
 
         setContentView(R.layout.activity_signup);
 
@@ -134,11 +140,26 @@ public class signup extends AppCompatActivity {
         fb_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                auth
+                        .startActivityForSignInWithProvider(/* activity= */ signup.this, provider.build())
+                        .addOnSuccessListener(
+                                new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        Toast.makeText(getApplicationContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(signup.this,profile.class));
+                                        finish();
+                                    }
+                                })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Handle failure.
+                                        Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
 
-                String u_name=name.getEditText().getText().toString().trim();
-                String u_email=email.getEditText().getText().toString().trim();
-                String u_psw=psw.getEditText().getText().toString().trim();
-
+                                    }
+                                });
             }
         });
 
@@ -163,7 +184,7 @@ public class signup extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        loginButton.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
