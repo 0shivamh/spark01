@@ -16,8 +16,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
     private static int s_screen=3000;
+    private FirebaseAuth auth;
+
 
     //vars
     Animation top_anim,bottom_anim;
@@ -41,28 +46,44 @@ public class MainActivity extends AppCompatActivity {
         name=findViewById(R.id.textView);
         heading=findViewById(R.id.headline);
 
+        auth= FirebaseAuth.getInstance();
+
+
         logo.setAnimation(top_anim);
         name.setAnimation(bottom_anim);
         heading.setAnimation(bottom_anim);
 
-        new Handler().postDelayed(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void run() {
-                Intent intent=new Intent(MainActivity.this,login.class);
 
-                Pair[] pairs=new Pair[2];
 
-                pairs[0]=new Pair<View,String>(logo,"logoimg");
-                pairs[1]=new Pair<View,String>(name,"head");
+    }
 
-                ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser firebaseUser=auth.getCurrentUser();
+        if(firebaseUser!=null){
+            startActivity(new Intent(MainActivity.this,profile.class));
+            finish();
+        }
+        else{
+            new Handler().postDelayed(new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void run() {
+                    Intent intent=new Intent(MainActivity.this,login.class);
 
-                startActivity(intent,options.toBundle());
-//                finish();
+                    Pair[] pairs=new Pair[2];
 
-            }
-        },s_screen);
+                    pairs[0]=new Pair<View,String>(logo,"logoimg");
+                    pairs[1]=new Pair<View,String>(name,"head");
 
+                    ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs);
+
+                    startActivity(intent,options.toBundle());
+
+
+                }
+            },s_screen);
+        }
     }
 }
