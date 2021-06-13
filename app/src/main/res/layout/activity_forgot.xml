@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo"
+        android:transitionName="logoimg"
+        android:contentDescription="@string/todo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/aclonica"
+        android:text="Forgot Password in just one click"
+        android:transitionName="head"
+        android:textSize="40sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="We'll send you email"
+        android:transitionName="t_t"
+        android:textSize="18sp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        >
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_address"
+            android:inputType="textEmailAddress"
+            android:transitionName="email_t"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/forgot_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:background="@drawable/custom_border"
+            android:layout_marginTop="10dp"
+            android:transitionName="go_t"
+            android:layout_marginBottom="5dp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>
