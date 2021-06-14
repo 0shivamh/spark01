@@ -50,9 +50,13 @@ public class login extends AppCompatActivity {
     TextInputLayout email, psw;
     TextView short_t;
 
+
     private FirebaseAuth auth;
     private GoogleSignInClient mGoogleSignInClient;
-    private final static  int RC_SIGN_IN=123;
+    private static final int RC_SIGN_IN = 234;
+
+    //Tag for the logs optional
+    private static final String TAG = "spark";
 
 
     OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
@@ -64,11 +68,16 @@ public class login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Twitter.initialize(this);
         setContentView(R.layout.activity_login);
 
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
+        mGoogleSignInClient =GoogleSignIn.getClient(this,gso);
 
         HandleSignUp = findViewById(R.id.newuser);
         logo = findViewById(R.id.logo);
@@ -82,11 +91,6 @@ public class login extends AppCompatActivity {
         fb_btn = findViewById(R.id.fb_btn);
 
         auth= FirebaseAuth.getInstance();
-
-        createRequest();
-
-
-
 
         go.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +117,7 @@ public class login extends AppCompatActivity {
                                 public void onSuccess(AuthResult authResult) {
                                     Toast.makeText(getApplicationContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(login.this,profile.class));
-                                    finish();
+//                                    finish();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -152,7 +156,7 @@ public class login extends AppCompatActivity {
                                     public void onSuccess(AuthResult authResult) {
                                         Toast.makeText(getApplicationContext(), "Logged in successfully", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(login.this,profile.class));
-                                        finish();
+//                                        finish();
                                     }
                                 })
                         .addOnFailureListener(
@@ -209,15 +213,8 @@ public class login extends AppCompatActivity {
 
     }
 
-    private  void createRequest(){
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-    }
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -228,40 +225,40 @@ public class login extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
-        loginButton.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-//                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(), "Login failed! Check entered details", Toast.LENGTH_SHORT).show();
-
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
             }
         }
     }
+
 
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    private static final String TAG = "null";
-
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            Toast.makeText(getApplicationContext(), "Log In in successfully", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(login.this,profile.class));
+//                            finish();
 
-                            FirebaseUser user = auth.getCurrentUser();
-//                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-//                            updateUI(null);
+                            Toast.makeText(getApplicationContext(), "Log In Failed!", Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 });
@@ -269,7 +266,6 @@ public class login extends AppCompatActivity {
 
 
 
-    //facebook OAuth
 
 
 

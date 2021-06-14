@@ -64,6 +64,7 @@
            android:layout_height="wrap_content"
            android:gravity="center"
            android:fontFamily="@font/audiowide"
+           android:textColor="@color/black"
            android:textSize="20dp"
            android:text="Hi"
            />
@@ -73,6 +74,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/audiowide"
             android:gravity="center"
+            android:textColor="@color/black"
             android:textSize="20dp"
             android:text="Hi"
             />

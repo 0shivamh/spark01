@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/aclonica"
+        android:textColor="@color/black"
         android:text="@string/hello_there_welcome_back"
         android:transitionName="head"
         android:textSize="40sp" />
@@ -33,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_in_to_continue"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:transitionName="t_t"
         />
@@ -52,6 +54,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/email_address"
             android:inputType="textEmailAddress"
+            app:hintTextColor="@color/black"
             android:transitionName="email_t"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -67,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
+            app:hintTextColor="@color/black"
             app:passwordToggleEnabled="true"
             android:transitionName="psw_t"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
